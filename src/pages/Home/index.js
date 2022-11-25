@@ -73,7 +73,7 @@ const Home = () => {
 
     return (
         <>
-            <div className="mx-auto p-6 w-full h-screen flex flex-col justify-center bg-fuchsia-200">
+            <div className="mx-auto p-6 w-full min-h-screen flex flex-col justify-center bg-fuchsia-200">
                 <div className="relative xl:w-2/4 sm:w-4/4 md:w-4/4 mx-auto bg-white rounded-lg h-5/6 xl:h-fit">
                     {isFetch ? (
                         <div className="w-full h-full absolute flex flex-col justify-center items-center rounded-lg bg-slate-50/90">
