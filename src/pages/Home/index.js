@@ -26,9 +26,8 @@ const Home = () => {
         }
 
         try {
-            const docRef = await addDoc(collection(db, "c_absensi"), data);
+            await addDoc(collection(db, "c_absensi"), data);
             setIsFetch(true);
-            console.log("Document written with ID: ", docRef.id);
         } catch (e) {console.log(e);}
     }
 
