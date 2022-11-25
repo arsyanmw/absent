@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import { db } from "../../config/firebase";
 import { collection, addDoc, getDocs, Timestamp, query, where, orderBy } from "firebase/firestore";
 import moment from "moment/moment";
 import {formatCurrenyID} from "../../helpers/common";
+import {FAB} from "../../components";
 
 const Home = () => {
     const [form, setForm] = useState({
@@ -13,6 +14,10 @@ const Home = () => {
     const [income, setIncome] = useState(0);
     const [isFetch, setIsFetch] = useState(true);
 
+    const dateDataByLog = useMemo(() => {
+        return Object.keys(logData).map(v => logData[v].date);
+    }, [logData])
+
     const handleMasuk = async () => {
         const data = {
             name: form.name,
@@ -21,9 +26,8 @@ const Home = () => {
         }
 
         try {
-            const docRef = await addDoc(collection(db, "c_absensi"), data);
+            await addDoc(collection(db, "c_absensi"), data);
             setIsFetch(true);
-            console.log("Document written with ID: ", docRef.id);
         } catch (e) {console.log(e);}
     }
 
@@ -70,6 +74,23 @@ const Home = () => {
             setIsFetch(false);
         })
     }, [isFetch]);
+
+    const handlePrint = () => {
+        let date = '';
+
+        date += moment(dateDataByLog[0]).locale('id').format('MMMM') + ' \n\n';
+        dateDataByLog.map(v => {
+            return date += moment(v).locale('id').format('dddd, DD MMMM YYYY') + ' \n';
+        })
+
+        const printDate = moment(dateDataByLog[0]).format('yyyy-MM-DD');
+        const blobFile = new Blob([date], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(blobFile);
+        const element = document.createElement("a");
+        element.download = `absen-${printDate}.txt`;
+        element.href = url;
+        element.click();
+    }
 
     return (
         <>
@@ -124,6 +145,7 @@ const Home = () => {
                     </div>
                 </div>
             </div>
+            <FAB onClick={handlePrint} />
         </>
     );
 };
